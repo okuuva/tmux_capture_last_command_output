@@ -5,7 +5,6 @@ PROMPT_PATTERN=${PROMPT_PATTERN:-" ] % "}
 EDITOR_CMD=$(tmux show-option -gqv @command-capture-editor-cmd)
 EDITOR_CMD=${EDITOR_CMD:-"$EDITOR -"}
 
-x=$(tmux capture-pane -pJS -)
-result=$(echo "$x" | tac | sed -e "0,/$PROMPT_PATTERN/d" | sed "/$PROMPT_PATTERN/,\$d" | tac)
+result=$(tmux capture-pane -pJS - | tac | sed -e "0,/$PROMPT_PATTERN/d" | sed "/$PROMPT_PATTERN/,\$d" | tac)
 
 tmux new-window -n last-command-output "echo \"$result\" | $EDITOR_CMD"
