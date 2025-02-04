@@ -9,6 +9,8 @@ CAPTURE_PANE_FLAGS=${CAPTURE_PANE_FLAGS:-"-pJS -"}
 EDITOR_CMD=$(tmux show-option -gqv "@command-capture-editor-cmd")
 EDITOR_CMD=${EDITOR_CMD:-"$EDITOR -"}
 
-result=$(tmux capture-pane "$CAPTURE_PANE_FLAGS" | tac | sed -n "1,${PROMPT_LINES}d; /$PROMPT_PATTERN/q; p" | tac)
+# We want the flags to split, otherwise they won't work
+# shellcheck disable=SC2086
+result=$(tmux capture-pane $CAPTURE_PANE_FLAGS | tac | sed -n "1,${PROMPT_LINES}d; /$PROMPT_PATTERN/q; p" | tac)
 
 tmux new-window -n last-command-output -e result="$result" "echo \"$result\" | $EDITOR_CMD"
